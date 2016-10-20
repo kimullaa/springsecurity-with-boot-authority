@@ -15,6 +15,10 @@ SpringSecurityでForm認証。
 一般人(user,password)
 管理者(admin,password)
 
+![ログイン後画面](images/user.png "サンプル")
+
+![管理者画面](images/sample.png "サンプル")
+
 参考
 ------
 * https://spring.io/guides/gs/securing-web/
