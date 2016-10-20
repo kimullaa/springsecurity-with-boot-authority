@@ -1,27 +1,34 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
-	<div class="container">
-		<div th:if="${param.error}">
-        	Invalid Name and Password.
-    	</div>
-       	<div th:if="${param.logout}">
-        	You have been logged out.
-        </div>
-        <form th:action="@{/login}" method="post">
-			<label for="name">Name</label> 
-			<input type="text" id="name" placeholder="Name" required="required"
-				autofocus="autofocus" name="username"/> 
-			<label for="password" >Password</label>
-			<input type="password" id="password" 
-				placeholder="Password" required="required" name="password"/>
-			<button  type="submit">Sign in</button>
-		</form>
-	</div>
+<div class="container">
+    <div th:if="${param.error}">
+        Invalid Name and Password.
+    </div>
+    <div th:if="${param.logout}">
+        You have been logged out.
+    </div>
+    <form th:action="@{/login}" method="post">
+        <label for="name">Name</label>
+        <input type="text" id="name" placeholder="Name" required="required"
+               autofocus="autofocus" name="username"/>
+        <label for="password">Password</label>
+        <input type="password" id="password"
+               placeholder="Password" required="required" name="password"/>
+        <button type="submit">Sign in</button>
+    </form>
+
+    <p>一般ユーザ id: "user" , password: "password"</p>
+    <p>管理者ユーザ id: "admin" , password: "password"</p>
+</div>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </body>
 </html>
