@@ -3,38 +3,40 @@ package com.example.configs;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.annotation.PostConstruct;
-
-@Configuration
-@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
+@EnableWebSecurity
 @AllArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()
                 .authorizeRequests()
-                    .mvcMatchers("/admin").hasAuthority("SHOW_ADMIN_PAGE")
-                    .mvcMatchers("/create-user").hasAuthority("CREATE_USER")
-                    .mvcMatchers("/all-user").hasAuthority("SHOW_ALL")
-                    .mvcMatchers("/user").hasAuthority("SHOW_USER_PAGE")
+                    .mvcMatchers(HttpMethod.PUT,"/api/roles/*").hasAuthority("CHANGE_ROLE")
+                    .mvcMatchers("/roles").hasAuthority("CHANGE_ROLE")
+                    .mvcMatchers("/users").hasAuthority("SHOW_ALL_USER")
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()
                     .loginPage("/login")
-                    .defaultSuccessUrl("/user")
+                    .defaultSuccessUrl("/home")
                     .failureUrl("/login?error")
                     .permitAll()
                 .and()

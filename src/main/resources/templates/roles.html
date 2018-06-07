@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"
+            integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <title>ADMIN PAGE</title>
+</head>
+<body>
+<div class="container">
+    <h1>管理画面</h1>
+
+    <p>ロールに対する権限を変更する</p>
+    <div th:each="role : ${roles}">
+        <h3>[[${role.value}]]</h3>
+        <form>
+            <input type="text" name="role" th:attr="value=${role.key}" hidden="hidden"/>
+            <span th:each="permission : ${permissions}" style="padding-right:20px">
+                <input name="permissions" type="checkbox" th:value="${permission.key}"/>
+                <label th:text="${permission.value}"></label>
+            </span>
+            <button type="button" class="btn btn-default">update</button>
+        </form>
+    </div>
+
+    <a th:href="@{/}">戻る</a>
+
+</div>
+<script th:inline="javascript">
+    $(function () {
+        var CONTEXT_PATH = /*[[@{/}]]*/ '';
+        $(".btn").on("click", function () {
+
+            var permissions = $.map($(this).parent("form").find("input[type=checkbox]:checked"), function (element, index) {
+                return $(element).val();
+            });
+
+            var query = "permissions=" + permissions.join("&permissions=");
+            var role = $($(this).parent("form").children("input[name=role]")).val();
+
+            $.ajax({
+                method: "PUT",
+                url: `${CONTEXT_PATH}roles/${role}?${query}`,
+            }).done(function (data) {
+                alert("更新しました。再ログイン後に反映されます。");
+            }).fail(function (e) {
+                alert("更新に失敗しました");
+            });
+        });
+    }())
+</script>
+</body>
+</html>

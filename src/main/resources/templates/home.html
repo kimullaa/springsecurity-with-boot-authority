@@ -1,26 +1,45 @@
-
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
-<title>USER PAGE</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <title>USER PAGE</title>
 </head>
 <body>
-	<h1>USER PAGE</h1>
-	<dl>
-		<dt>username</dt>
-		<dd sec:authentication="principal.username"></dd>
-		<dt>authorities</dt>
-		<dd sec:authentication="principal.authorities"></dd>
-	</dl>
+<div class="container">
+    <h1>USER PAGE</h1>
+    <h2>認証情報</h2>
+    <dl>
+        <dt>username</dt>
+        <dd sec:authentication="principal.username"></dd>
+        <dt>authorities</dt>
+        <dd sec:authentication="principal.authorities">
+        </dd>
+    </dl>
 
-	<div sec:authorize="hasRole('ADMIN')">
-		<a th:href="@{/admin}">to admin page</a>
-	</div>
+    <h2>画面一覧</h2>
+    <ul>
+        <li>
+            <a th:href="@{/roles}">権限管理画面</a>
+            <span sec:authorize="!hasAuthority('CHANGE_ROLE')">許可されてません</span>
+            <span sec:authorize="hasAuthority('CHANGE_ROLE')">許可されてます</span>
+        </li>
+        <li>
+            <a th:href="@{/users}">ユーザ一覧画面</a>
+            <span sec:authorize="!hasAuthority('SHOW_ALL_USER')">許可されてません</span>
+            <span sec:authorize="hasAuthority('SHOW_ALL_USER')">許可されてます</span>
+        </li>
+    </ul>
 
-	<form th:action="@{/logout}" method="post">
-		<input type="submit" value="Sign Out" />
-	</form>
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="Sign Out"/>
+    </form>
+
+</div>
 </body>
 </html>

@@ -7,21 +7,21 @@ import com.example.repositories.RoleRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-@RequestMapping("admin")
+@RequestMapping("roles")
 @Controller
 @AllArgsConstructor
-public class AdminController {
+public class RoleController {
     private PermissionRepository permissionRepository;
     private RoleRepository roleRepository;
 
     @GetMapping
-    public String admin(Model model) {
+    public String roles(Model model) {
         model.addAttribute("permissions",
                 StreamSupport.stream(permissionRepository.findAll().spliterator(), false)
                         .collect(Collectors.toMap(
@@ -36,6 +36,18 @@ public class AdminController {
                                 Role::getName
                         )));
 
-        return "admin-page";
+        return "roles";
+    }
+
+    @PutMapping("{id}")
+    @ResponseBody
+    public Role putRole(@PathVariable Long id, @RequestParam("permissions") List<Long> permissions) {
+        List<Permission> perms = permissions.stream()
+                .map(perm -> new Permission(perm))
+                .collect(Collectors.toList());
+
+        Role role = roleRepository.findById(id).orElseThrow(() -> new RuntimeException("oops"));
+        role.setPermissions(perms);
+        return roleRepository.save(role);
     }
 }
